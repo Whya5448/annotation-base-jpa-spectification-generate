@@ -52,8 +52,9 @@ _SearchRequest 내부에서 deptId가 null이 아닌 조건을 추가로 건다.
 
 |제목|조건|내용|설명|예제|
 |------|---|---|---|---|
-|empNo|Or|전체 검색|조건에 All 이 들어가는 모든 필드에 값을 주입함.|Z
-|name|All/Or|API 이름 검색|GatewayApi entity 내 name 필드 Like 검색|Z
-|dept|All/Or|API URI 검색|GatewayApi entity 내 uri 필드 Like 검색|ZZ
-|state|And|상태 검색|GatewayApi entity 내 state 필드 equals 검색|SAVED
+|All|Or|전체 검색|조건에 All 이 들어가는 모든 필드에 값을 주입함.|부
+|empNo|Or|전체 검색|Employer entity 내 id 필드 Like 검색|4
+|name|All/Or|API 이름 검색|Employer entity 내 name 필드 Like 검색|가개
+|dept|All/Or|API URI 검색|Employer entity 내 dept 필드 Like 검색|2부
+|state|And|상태 검색|GatewayApi Employer 내 state 필드 equals 검색|DELETED
 

@@ -1,12 +1,17 @@
 insert into user_id
 values ('82000174');
-insert into employer
-values ('개발부', '0001', '개발자', 'ENABLED', '82000174');
+insert into employer(dept, dept_id, name, state, emp_no)
+values ('개발1부', '0001', '가개발자', 'ENABLED', '82000174');
 
 insert into user_id
 values ('82000175');
-insert into employer
-values ('개발부', '0002', '안개발자', 'DELETED', '82000175');
+insert into employer(dept, dept_id, name, state, emp_no)
+values ('개발2부', '0002', '나개발자', 'DELETED', '82000175');
+
+insert into user_id
+values ('82000176');
+insert into employer(dept, dept_id, name, state, emp_no)
+values ('개발3부', null, '다개발자', 'SAVED', '82000176');
 
 insert into gateway_api_service
 values (1, 'A Service');

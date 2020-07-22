@@ -17,16 +17,12 @@ import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationge
 @EqualsAndHashCode(callSuper = true)
 @PrimaryKeyJoinColumn(name = "emp_no")
 public class Employer extends User {
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "dept")
     private String dept;
 
     @Column(name = "dept_id")
     private String deptId;
 
-    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private GeneralState state;
 
