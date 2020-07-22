@@ -1,3 +1,7 @@
+# Info
+어노테이션 기반 Jpa Specification 생성 예제
+
+기초 데이터는 src/main/resources/data.sql 참조
 
 # APIs
 ## GatewayAPI search
