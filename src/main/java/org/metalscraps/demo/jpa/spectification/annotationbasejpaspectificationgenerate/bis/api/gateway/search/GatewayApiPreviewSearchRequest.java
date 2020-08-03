@@ -10,6 +10,9 @@ import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationge
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.And;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.Or;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.XPredicate;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.invoker.Equal;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.invoker.ZonedDateTimeGreaterThanOrEqualTo;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.invoker.ZonedDateTimeLessThanOrEqualTo;
 
 @Getter
 @Setter
@@ -36,15 +39,15 @@ public class GatewayApiPreviewSearchRequest extends SearchRequest<GatewayApi> {
     private String createId;
 
     @And
-    @XPredicate("equal")
+    @XPredicate(Equal.class)
     private GeneralState state;
 
     @Or
-    @XPredicate(value = "zonedDateTimeGreaterThanOrEqualTo", fieldName = "createDate")
+    @XPredicate(value = ZonedDateTimeGreaterThanOrEqualTo.class, fieldName = "createDate")
     private Long startDate;
 
     @Or
-    @XPredicate(value = "zonedDateTimeLessThanOrEqualTo", fieldName = "createDate")
+    @XPredicate(value = ZonedDateTimeLessThanOrEqualTo.class, fieldName = "createDate")
     private Long endDate;
 
     public void setStartDate(Long startDate) {

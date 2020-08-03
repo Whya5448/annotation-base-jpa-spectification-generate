@@ -2,13 +2,14 @@ package org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationg
 
 import lombok.Getter;
 import lombok.Setter;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.bis.employer.Employer;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.enums.GeneralState;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.SearchRequest;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.All;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.And;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.Or;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.XPredicate;
-import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.bis.employer.Employer;
-import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.enums.GeneralState;
-import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.SearchRequest;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.invoker.Equal;
 import org.springframework.data.jpa.domain.Specification;
 
 @Getter
@@ -31,7 +32,7 @@ public class EmployerSearchRequest extends SearchRequest<Employer> {
     private String dept;
 
     @And
-    @XPredicate("equal")
+    @XPredicate(Equal.class)
     private GeneralState state;
 
     @Override

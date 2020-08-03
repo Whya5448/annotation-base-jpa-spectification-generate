@@ -3,16 +3,10 @@ package org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationg
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -21,6 +15,7 @@ import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationge
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.And;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.Or;
 import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.annotations.XPredicate;
+import org.metalscraps.demo.jpa.spectification.annotationbasejpaspectificationgenerate.util.jpa.search.invoker.SearchPredicateInvoker;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
@@ -40,13 +35,6 @@ public class Searches {
         return !isFieldNull(o, f);
     }
 
-    private static Optional<Method> getMethod(String name) {
-        return Stream.of(Invoke.class.getDeclaredMethods())
-            .filter(it -> it.getName().equalsIgnoreCase(name))
-            .peek(it -> it.setAccessible(true))
-            .findFirst();
-    }
-
     private static <T> List<Field> getMethodsByAnnotations(SearchRequest<T> o, Class<? extends Annotation> annotationClass) {
         return Stream.of(o.getClass().getDeclaredFields())
             .filter(it -> it.getAnnotation(annotationClass) != null)
@@ -62,7 +50,7 @@ public class Searches {
             if (StringUtils.isEmpty(columnName)) {
                 columnName = it.getName();
             }
-            String value = XPredicate.value();
+
             Object fieldValue = it.get(o);
 
             if (XPredicate.authOverride()) {
@@ -78,11 +66,11 @@ public class Searches {
                 path = root.get(columnName);
             }
 
-            Method method = Searches.getMethod(value).get();
-            return (Predicate) method.invoke(null, path, fieldValue, cb);
+            Class<? extends SearchPredicateInvoker> predicateInvokerClass = XPredicate.value();
+            SearchPredicateInvoker searchPredicateInvoker = predicateInvokerClass.getConstructor().newInstance();
+            return searchPredicateInvoker.invoke(path, fieldValue, cb);
 
-
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             log.error(e.getMessage(), e);
             return (Predicate) (Specification<T>) (a, b, c) -> c.conjunction();
         }
@@ -115,25 +103,4 @@ public class Searches {
             .map(it -> (Specification<T>) (root, query, cb) -> getPredicate(o, it, root, cb))
             .reduce(Specification.where(null), (x, y) -> x == null ? y : y == null ? x : x.and(y));
     }
-
-    @SuppressWarnings("unused")
-    static class Invoke {
-
-        private static <Y> Predicate equal(Expression<Y> x, Y v, CriteriaBuilder cb) {
-            return cb.equal(x, v);
-        }
-
-        private static Predicate stringLike(Expression<String> x, String v, CriteriaBuilder cb) {
-            return cb.like(cb.upper(x), String.format("%%%s%%", v.toUpperCase()));
-        }
-
-        private static Predicate zonedDateTimeGreaterThanOrEqualTo(Expression<ZonedDateTime> x, Long v, CriteriaBuilder cb) {
-            return cb.greaterThanOrEqualTo(x, ZonedDateTime.ofInstant(Instant.ofEpochMilli(v), ZoneOffset.ofHours(9)));
-        }
-
-        private static Predicate zonedDateTimeLessThanOrEqualTo(Expression<ZonedDateTime> x, Long v, CriteriaBuilder cb) {
-            return cb.lessThanOrEqualTo(x, ZonedDateTime.ofInstant(Instant.ofEpochMilli(v), ZoneOffset.ofHours(9)));
-        }
-    }
-
 }
